@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.second.dao.CqnuDao">
+    <resultMap id="BaseResultMap" type="com.example.second.entity.Cqnu">
+        <id column="uid" property="uid" jdbcType="BIGINT"/>
+        <result column="news" property="news" jdbcType="VARCHAR"/>
+        <result column="focus" property="focus" jdbcType="VARCHAR"/>
+        <result column="dynamic" property="dynamic" jdbcType="VARCHAR"/>
+        <result column="notice" property="notice" jdbcType="VARCHAR"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        uid, news, focus, dynamic, notice 
+    </sql>
+
+    <select id="findAllCqnus" resultType="com.example.second.entity.Cqnu">
+        select * from cqnu
+    </select>
+
+    <select id="findCqnuByName" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select * from cqnu where focus = #{focus,jdbcType=VARCHAR}
+    </select>
+
+    <delete id="deleteCqnusByIds">
+        delete from cqnu where uid in
+        <foreach collection="ids" item="id" separator="," open="(" close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="getCountCqnus" resultType="java.lang.Integer">
+        select count(uid) as count from cqnu
+    </select>
+
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        select
+        <include refid="Base_Column_List"/>
+        from cqnu
+        where uid = #{uid,jdbcType=BIGINT}
+    </select>
+    <delete id="deleteCqnuById" parameterType="java.lang.Long">
+        delete from cqnu
+        where uid = #{uid,jdbcType=BIGINT}
+    </delete>
+
+    <insert id="insert" parameterType="com.example.second.entity.Cqnu">
+        insert into cqnu (uid, news, focus, period, credit, dynamic, notice)
+        values (#{uid,jdbcType=BIGINT}, #{news,jdbcType=VARCHAR}, #{focus,jdbcType=VARCHAR},
+                #{dynamic,jdbcType=VARCHAR},#{notice,jdbcType=VARCHAR})
+    </insert>
+    <insert id="addCqnu" parameterType="com.example.second.entity.Cqnu">
+        insert into cqnu
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="uid != null">
+                uid,
+            </if>
+            <if test="news != null">
+                news,
+            </if>
+            <if test="focus != null">
+                focus,
+            </if>
+            <if test="dynamic != null">
+                dynamic,
+            </if>
+            <if test="notice != null">
+                notice,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="uid != null">
+                #{uid,jdbcType=BIGINT},
+            </if>
+            <if test="news != null">
+                #{news,jdbcType=VARCHAR},
+            </if>
+            <if test="focus != null">
+                #{focus,jdbcType=VARCHAR},
+            </if>
+            <if test="dynamic != null">
+                #{dynamic,jdbcType=VARCHAR},
+            </if>
+            <if test="notice != null">
+                #{notice,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateCqnu" parameterType="com.example.second.entity.Cqnu">
+        update cqnu
+        <set>
+            <if test="news != null">
+                news = #{news,jdbcType=VARCHAR},
+            </if>
+            <if test="focus != null">
+                focus = #{focus,jdbcType=VARCHAR},
+            </if>
+            <if test="dynamic != null">
+                dynamic = #{dynamic,jdbcType=VARCHAR},
+            </if>
+            <if test="notice != null">
+                notice = #{notice,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where uid = #{uid,jdbcType=BIGINT}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.example.second.entity.Cqnu">
+        update cqnu
+        set news = #{news,jdbcType=VARCHAR},
+        focus = #{focus,jdbcType=VARCHAR},
+        dynamic = #{dynamic,jdbcType=VARCHAR},
+        notice = #{notice,jdbcType=VARCHAR},
+        where uid = #{uid,jdbcType=BIGINT}
+    </update>
+</mapper>
